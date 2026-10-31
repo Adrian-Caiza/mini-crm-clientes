@@ -70,19 +70,37 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Aplicar migraciones de base de datos
+### 4. Configurar variables de entorno (.env)
+
+Copia el archivo `.env.example` para habilitar el modo depuración (`DEBUG=True`) en desarrollo:
+
+```bash
+# Windows (PowerShell)
+Copy-Item .env.example .env
+
+# macOS / Linux
+cp .env.example .env
+```
+
+### 5. Aplicar migraciones de base de datos
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. (Opcional) Crear superusuario para el panel de administración
+### 6. (Opcional) Poblar clientes de demostración
+
+```bash
+python manage.py seed_clients
+```
+
+### 7. (Opcional) Crear superusuario para el panel de administración
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 6. Ejecutar el servidor de desarrollo
+### 8. Ejecutar el servidor de desarrollo
 
 ```bash
 python manage.py runserver
@@ -179,13 +197,15 @@ Accede al panel de administración en **http://localhost:8000/admin**
 
 ## 🔒 Variables de entorno
 
-El proyecto lee su configuración desde variables de entorno con valores por defecto seguros para desarrollo local. Puedes usar el archivo `.env.example` como referencia para crear tu propio `.env`:
+El proyecto lee su configuración desde variables de entorno o desde el archivo `.env` mediante `python-dotenv`. Por seguridad, `DEBUG` tiene como valor por defecto `False` y `SECRET_KEY` es obligatoria cuando `DEBUG=False`.
 
-| Variable | Descripción | Valor por defecto (Dev) | Ejemplo Producción |
+Para desarrollo, utiliza `.env.example` como plantilla:
+
+| Variable | Descripción | Valor por defecto | Configuración Desarrollo (.env / Docker) |
 |---|---|---|---|
-| `SECRET_KEY` | Clave secreta criptográfica de Django | Clave de desarrollo | `django-insecure-prod-key-xyz...` |
-| `DEBUG` | Modo depuración | `True` | `False` |
-| `ALLOWED_HOSTS` | Hosts/dominios permitidos (separados por coma) | `localhost,127.0.0.1,[::1]` | `crm.ejemplo.com` |
+| `SECRET_KEY` | Clave secreta criptográfica (obligatoria si `DEBUG=False`) | Ninguno (falla si `DEBUG=False`) | `cambia-esta-clave` |
+| `DEBUG` | Modo depuración (por defecto `False` por seguridad) | `False` | `True` |
+| `ALLOWED_HOSTS` | Hosts/dominios permitidos (separados por coma) | `localhost,127.0.0.1,[::1]` | `localhost,127.0.0.1,[::1],web` |
 | `DJANGO_DB_DIR` | Carpeta donde se almacena `db.sqlite3` | Raíz del proyecto (`BASE_DIR`) | `/app/data` (Docker volume) |
 
 ---

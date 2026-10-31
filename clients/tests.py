@@ -140,7 +140,7 @@ class ClientModelAndApiTests(TestCase):
         cmd = [
             sys.executable,
             "-c",
-            "import os; os.environ['DEBUG']='False'; os.environ.pop('SECRET_KEY', None); import crm_project.settings",
+            "import os; os.environ['DEBUG']='False'; os.environ['SECRET_KEY']=''; import crm_project.settings",
         ]
         res = subprocess.run(cmd, capture_output=True, text=True)
         self.assertNotEqual(res.returncode, 0)

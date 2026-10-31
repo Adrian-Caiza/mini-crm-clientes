@@ -17,14 +17,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
 # Database directory override (useful for Docker volume persistence)
-DB_DIR = Path(os.environ.get('DJANGO_DB_DIR', BASE_DIR))
-DB_DIR.mkdir(parents=True, exist_ok=True)
+_db_dir_env = os.environ.get('DJANGO_DB_DIR')
+if _db_dir_env:
+    DB_DIR = Path(_db_dir_env)
+    try:
+        DB_DIR.mkdir(parents=True, exist_ok=True)
+    except (PermissionError, OSError):
+        DB_DIR = BASE_DIR
+else:
+    DB_DIR = BASE_DIR
 
 # ---------------------------------------------------------------------------
 # Security & Environment Configuration
 # ---------------------------------------------------------------------------
-# DEBUG is True by default for development, set to False in production.
-DEBUG = os.environ.get('DEBUG', 'True').strip().lower() in ('true', '1', 'yes', 't')
+# DEBUG defaults to False for security; enable explicitly with DEBUG=True in .env for development.
+DEBUG = os.environ.get('DEBUG', 'False').strip().lower() in ('true', '1', 'yes', 't')
 
 # SECRET_KEY must be provided via environment variables or .env.
 # Fails with a clear error if DEBUG is False and SECRET_KEY is not set.

@@ -48,11 +48,15 @@ jobs:
         run: python manage.py check
         env:
           DJANGO_SETTINGS_MODULE: crm_project.settings
+          SECRET_KEY: ci-test-secret-key-32-chars-long
+          DEBUG: "True"
 
       - name: Run Django test suite
         run: python manage.py test
         env:
           DJANGO_SETTINGS_MODULE: crm_project.settings
+          SECRET_KEY: ci-test-secret-key-32-chars-long
+          DEBUG: "True"
 
       # ── Step 5: Build Docker image ────────────────────────
       # Validates the Dockerfile by building the image locally.
