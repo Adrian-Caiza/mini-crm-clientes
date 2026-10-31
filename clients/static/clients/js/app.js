@@ -305,6 +305,33 @@ function setSubmitLoading(isLoading) {
 /* ================================================================
    10. FORM SUBMISSION (Create & Update)
    ================================================================ */
+/**
+ * Validates client payload before sending a network request.
+ * @param {{ name: string, email: string, phone: string }} payload
+ * @returns {Record<string, string[]>} Errors object mapped by field
+ */
+function validateClientPayload(payload) {
+  const errors = {};
+
+  if (!payload.name || payload.name.length < 2) {
+    errors.name = ['El nombre debe tener al menos 2 caracteres.'];
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!payload.email || !emailRegex.test(payload.email)) {
+    errors.email = ['Introduce un correo electrónico válido.'];
+  }
+
+  if (payload.phone) {
+    const phoneRegex = /^[\d\s+\-()]+$/;
+    if (!phoneRegex.test(payload.phone)) {
+      errors.phone = ['El teléfono solo puede contener números, +, -, espacios y paréntesis.'];
+    }
+  }
+
+  return errors;
+}
+
 async function handleFormSubmit(event) {
   event.preventDefault();
   clearFormErrors();
@@ -317,6 +344,13 @@ async function handleFormSubmit(event) {
     company: f.querySelector('[name=company]').value.trim(),
     phone:   f.querySelector('[name=phone]').value.trim(),
   };
+
+  // Frontend validation before network call
+  const clientErrors = validateClientPayload(payload);
+  if (Object.keys(clientErrors).length > 0) {
+    displayFormErrors(clientErrors);
+    return;
+  }
 
   const isEdit = appState.currentEditId !== null;
   const url    = isEdit
