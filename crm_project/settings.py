@@ -23,14 +23,20 @@ DB_DIR.mkdir(parents=True, exist_ok=True)
 # ---------------------------------------------------------------------------
 # Security & Environment Configuration
 # ---------------------------------------------------------------------------
-# In production, provide SECRET_KEY via environment variables.
-SECRET_KEY = os.environ.get(
-    'SECRET_KEY',
-    'django-insecure-mini-crm-dev-key-change-in-production-please',
-)
-
 # DEBUG is True by default for development, set to False in production.
 DEBUG = os.environ.get('DEBUG', 'True').strip().lower() in ('true', '1', 'yes', 't')
+
+# SECRET_KEY must be provided via environment variables or .env.
+# Fails with a clear error if DEBUG is False and SECRET_KEY is not set.
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    if not DEBUG:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            'La variable de entorno SECRET_KEY es obligatoria cuando DEBUG=False. '
+            'Por favor, configure SECRET_KEY en las variables de entorno o en el archivo .env.'
+        )
+    SECRET_KEY = 'django-insecure-dev-only'
 
 # ALLOWED_HOSTS comma-separated list of host/domain names.
 _allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,[::1]')

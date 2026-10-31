@@ -134,6 +134,19 @@ class ClientModelAndApiTests(TestCase):
         self.assertFalse(data["success"])
         self.assertIn("name", data["errors"])
 
+    def test_missing_secret_key_when_debug_false_raises_error(self):
+        import subprocess
+        import sys
+        cmd = [
+            sys.executable,
+            "-c",
+            "import os; os.environ['DEBUG']='False'; os.environ.pop('SECRET_KEY', None); import crm_project.settings",
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        self.assertNotEqual(res.returncode, 0)
+        self.assertIn("ImproperlyConfigured", res.stderr)
+        self.assertIn("SECRET_KEY es obligatoria cuando DEBUG=False", res.stderr)
+
     def test_api_client_update_success(self):
         payload = {
             "name": "Elena Rostova Actualizada",

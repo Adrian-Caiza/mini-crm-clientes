@@ -30,10 +30,10 @@ services:
       # Named volume keeps the SQLite database directory across restarts
       - sqlite_data:/app/data
 
-    # Environment overrides (safe defaults for development)
+    # Environment variables: reads SECRET_KEY from environment or .env, without fixed fallback
     environment:
       - DJANGO_SETTINGS_MODULE=crm_project.settings
-      - SECRET_KEY=django-insecure-mini-crm-docker-dev-key-change-in-production
+      - SECRET_KEY
       - DEBUG=True
       - ALLOWED_HOSTS=localhost,127.0.0.1,web,0.0.0.0
       - DJANGO_DB_DIR=/app/data
