@@ -127,6 +127,9 @@ function attachEventListeners() {
   dom.searchInput?.addEventListener('input', debounce(applyFilters, 180));
   dom.filterSelect?.addEventListener('change', applyFilters);
 
+  // Table action delegation (edit & delete buttons)
+  dom.tableBody?.addEventListener('click', handleTableActionClick);
+
   // Mobile sidebar
   dom.hamburgerBtn?.addEventListener('click', toggleMobileSidebar);
   dom.sidebarOverlay?.addEventListener('click', closeMobileSidebar);
@@ -474,8 +477,29 @@ async function executeDelete() {
 }
 
 /* ================================================================
-   12. TABLE ROW BUILDERS
+   12. TABLE ROW BUILDERS & EVENT DELEGATION
    ================================================================ */
+/**
+ * Handles clicks delegated to the table body for edit and delete actions.
+ * @param {MouseEvent} event
+ */
+function handleTableActionClick(event) {
+  const actionBtn = event.target.closest('button[data-action]');
+  if (!actionBtn) return;
+
+  const action = actionBtn.dataset.action;
+  const clientId = parseInt(actionBtn.dataset.clientId, 10);
+  if (!clientId) return;
+
+  if (action === 'edit') {
+    openEditModal(clientId);
+  } else if (action === 'delete') {
+    const row = actionBtn.closest('tr');
+    const clientName = actionBtn.dataset.clientName || row?.dataset.clientName || 'este cliente';
+    promptDeleteClient(clientId, clientName);
+  }
+}
+
 /**
  * Generates the inner HTML for a client table row.
  * @param {{ id, name, company, email, phone, status }} client
@@ -484,7 +508,6 @@ async function executeDelete() {
 function buildRowInnerHtml(client) {
   const avatarLetter = (client.name || '?').charAt(0).toUpperCase();
   const statusClass  = getStatusBadgeClass(client.status);
-  const safeQuote    = (s) => escapeHtml(s || '').replace(/'/g, '&#39;');
 
   return `
     <td>
@@ -504,7 +527,8 @@ function buildRowInnerHtml(client) {
         <button
           class="btn btn--icon"
           type="button"
-          onclick="openEditModal(${client.id})"
+          data-action="edit"
+          data-client-id="${client.id}"
           title="Editar ${escapeHtml(client.name)}"
           aria-label="Editar cliente ${escapeHtml(client.name)}"
         >
@@ -516,7 +540,9 @@ function buildRowInnerHtml(client) {
         <button
           class="btn btn--icon btn--danger-icon"
           type="button"
-          onclick="promptDeleteClient(${client.id}, '${safeQuote(client.name)}')"
+          data-action="delete"
+          data-client-id="${client.id}"
+          data-client-name="${escapeHtml(client.name)}"
           title="Eliminar ${escapeHtml(client.name)}"
           aria-label="Eliminar cliente ${escapeHtml(client.name)}"
         >

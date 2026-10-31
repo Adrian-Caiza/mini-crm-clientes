@@ -186,7 +186,8 @@
                 <button
                   class="btn btn--icon"
                   type="button"
-                  onclick="openEditModal({{ client.id }})"
+                  data-action="edit"
+                  data-client-id="{{ client.id }}"
                   title="Editar {{ client.name }}"
                   aria-label="Editar cliente {{ client.name }}"
                 >
@@ -199,7 +200,9 @@
                 <button
                   class="btn btn--icon btn--danger-icon"
                   type="button"
-                  onclick="promptDeleteClient({{ client.id }}, '{{ client.name|escapejs }}')"
+                  data-action="delete"
+                  data-client-id="{{ client.id }}"
+                  data-client-name="{{ client.name }}"
                   title="Eliminar {{ client.name }}"
                   aria-label="Eliminar cliente {{ client.name }}"
                 >
