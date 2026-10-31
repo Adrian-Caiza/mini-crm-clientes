@@ -1,0 +1,47 @@
+# ============================================================
+# Mini CRM de Clientes — docker-compose.yml
+# Orchestrates the Django web service with a persistent
+# SQLite volume for data durability across container restarts.
+# ============================================================
+
+version: "3.9"
+
+services:
+  web:
+    # Build the image from the Dockerfile in the project root
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Name the resulting container for easy identification
+    container_name: mini_crm_web
+
+    # Run migrations then start the dev server
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+
+    # Map host port 8000 → container port 8000
+    ports:
+      - "8000:8000"
+
+    # Mount the project directory so code changes are reflected
+    # without rebuilding the image (useful during development)
+    volumes:
+      - .:/app
+      # Named volume keeps the SQLite database directory across restarts
+      - sqlite_data:/app/data
+
+    # Environment overrides (safe defaults for development)
+    environment:
+      - DJANGO_SETTINGS_MODULE=crm_project.settings
+      - DEBUG=True
+      - DJANGO_DB_DIR=/app/data
+
+    # Restart policy: keep the container alive unless explicitly stopped
+    restart: unless-stopped
+
+# ── Named volumes ────────────────────────────────────────────
+volumes:
+  sqlite_data:
+    driver: local

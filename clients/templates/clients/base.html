@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mini CRM — Gestión moderna de clientes. Registra, edita y monitorea tu cartera de clientes en un solo lugar." />
+  <meta name="theme-color" content="#0a0b0f" />
+  <title>{% block title %}Mini CRM{% endblock %}</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="{% static 'clients/css/styles.css' %}" />
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <!-- =====================================================================
+       Mobile: off-canvas sidebar backdrop
+       ===================================================================== -->
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- =====================================================================
+       Mobile: sticky top header (hidden on desktop via CSS)
+       ===================================================================== -->
+  <header class="mobile-header" role="banner">
+    <button id="hamburger-btn" class="hamburger-btn" aria-label="Abrir menú de navegación">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22" aria-hidden="true">
+        <line x1="3" y1="6"  x2="21" y2="6"  />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+    <span class="mobile-brand-name">Mini CRM</span>
+    <!-- Spacer to keep brand centered -->
+    <div style="width:32px;" aria-hidden="true"></div>
+  </header>
+
+  <!-- =====================================================================
+       Application layout: sidebar + main
+       ===================================================================== -->
+  <div class="app-layout">
+
+    <!-- -----------------------------------------------------------------
+         Sidebar navigation
+         ----------------------------------------------------------------- -->
+    <aside id="sidebar" class="sidebar" aria-label="Menú principal">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="20" height="20">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">Mini CRM</div>
+          <div class="brand-tagline">Gestión de Clientes</div>
+        </div>
+      </div>
+
+      <!-- Navigation links -->
+      <nav class="sidebar-nav" role="navigation">
+        <p class="nav-section-label">Principal</p>
+        <a href="{% url 'clients:dashboard' %}" class="nav-item active" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Dashboard
+        </a>
+
+        <p class="nav-section-label">Acciones</p>
+        <button class="nav-item" id="sidebar-new-client-btn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+          Nuevo Cliente
+        </button>
+      </nav>
+
+      <!-- Sidebar footer / user info -->
+      <div class="sidebar-footer" aria-label="Usuario actual">
+        <div class="sidebar-footer-avatar" aria-hidden="true">A</div>
+        <div class="sidebar-footer-info">
+          <div class="user-name">Administrador</div>
+          <div class="user-role">CRM Manager</div>
+        </div>
+      </div>
+    </aside><!-- /sidebar -->
+
+    <!-- -----------------------------------------------------------------
+         Main content area
+         ----------------------------------------------------------------- -->
+    <main class="main-content" id="main-content" role="main" tabindex="-1">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div><!-- /app-layout -->
+
+  <!-- App JavaScript -->
+  <script src="{% static 'clients/js/app.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
