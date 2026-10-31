@@ -6,11 +6,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # ---------------------------------------------------------------------------
 # Base directory
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env if present
+load_dotenv(BASE_DIR / '.env')
 
 # Database directory override (useful for Docker volume persistence)
 DB_DIR = Path(os.environ.get('DJANGO_DB_DIR', BASE_DIR))
