@@ -167,21 +167,21 @@
             data-client-status="{{ client.status }}"
             data-client-created="{{ client.created_at|date:'d/m/Y' }}"
           >
-            <td>
+            <td data-label="Nombre">
               <div class="client-name-cell">
                 <div class="client-avatar" aria-hidden="true">{{ client.name|first|upper }}</div>
                 <span class="client-full-name">{{ client.name }}</span>
               </div>
             </td>
-            <td class="cell-company">{{ client.company|default:"—" }}</td>
-            <td class="cell-email">{{ client.email }}</td>
-            <td class="cell-phone">{{ client.phone|default:"—" }}</td>
-            <td>
+            <td data-label="Empresa" class="cell-company">{{ client.company|default:"—" }}</td>
+            <td data-label="Correo electrónico" class="cell-email">{{ client.email }}</td>
+            <td data-label="Teléfono" class="cell-phone">{{ client.phone|default:"—" }}</td>
+            <td data-label="Estado">
               <span class="status-badge status-badge--{{ client.status|lower }}">
                 {{ client.status }}
               </span>
             </td>
-            <td>
+            <td data-label="Acciones">
               <div class="actions-cell">
                 <button
                   class="btn btn--icon"

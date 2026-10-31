@@ -1203,9 +1203,79 @@ select.form-control option { background: var(--bg-elevated); }
   .stats-section    { padding: 16px; }
   .clients-section  { padding: 0 16px 24px; }
 
-  /* Hide phone column on mobile to save space */
-  .clients-table th:nth-child(4),
-  .clients-table td:nth-child(4) { display: none; }
+  /* Transform table rows into modern mobile cards (<= 768px) */
+  .table-scroll-wrapper {
+    overflow-x: visible;
+  }
+
+  .clients-table {
+    display: block;
+    width: 100%;
+    border-collapse: separate;
+  }
+
+  .clients-table thead {
+    display: none;
+  }
+
+  .clients-table tbody {
+    display: block;
+    width: 100%;
+    padding: 12px;
+  }
+
+  .clients-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    gap: 10px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .clients-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .clients-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    border-bottom: none;
+    font-size: 13px;
+    color: var(--text-primary);
+    text-align: right;
+    gap: 12px;
+  }
+
+  .clients-table td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .clients-table td[data-label="Acciones"] {
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .clients-table td[data-label="Acciones"]::before {
+    margin-right: auto;
+  }
+
+  .client-name-cell {
+    justify-content: flex-end;
+  }
 }
 
 /* ================================================================
@@ -1218,10 +1288,6 @@ select.form-control option { background: var(--bg-elevated); }
 
   /* Stack form to single column */
   .form-grid { grid-template-columns: 1fr; }
-
-  /* Hide company column on very small screens */
-  .clients-table th:nth-child(2),
-  .clients-table td:nth-child(2) { display: none; }
 
   /* Stack confirm buttons */
   .confirm-dialog__actions { flex-direction: column; }

@@ -510,19 +510,19 @@ function buildRowInnerHtml(client) {
   const statusClass  = getStatusBadgeClass(client.status);
 
   return `
-    <td>
+    <td data-label="Nombre">
       <div class="client-name-cell">
         <div class="client-avatar" aria-hidden="true">${avatarLetter}</div>
         <span class="client-full-name">${escapeHtml(client.name)}</span>
       </div>
     </td>
-    <td class="cell-company">${escapeHtml(client.company) || '—'}</td>
-    <td class="cell-email">${escapeHtml(client.email)}</td>
-    <td class="cell-phone">${escapeHtml(client.phone) || '—'}</td>
-    <td>
+    <td data-label="Empresa" class="cell-company">${escapeHtml(client.company) || '—'}</td>
+    <td data-label="Correo electrónico" class="cell-email">${escapeHtml(client.email)}</td>
+    <td data-label="Teléfono" class="cell-phone">${escapeHtml(client.phone) || '—'}</td>
+    <td data-label="Estado">
       <span class="status-badge ${statusClass}">${escapeHtml(client.status)}</span>
     </td>
-    <td>
+    <td data-label="Acciones">
       <div class="actions-cell">
         <button
           class="btn btn--icon"
