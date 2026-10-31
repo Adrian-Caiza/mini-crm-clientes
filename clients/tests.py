@@ -67,7 +67,7 @@ class ClientModelAndApiTests(TestCase):
         self.assertEqual(Client.objects.filter(email="marcos.diaz@acme.inc").count(), 1)
 
     def test_api_client_create_validation_error(self):
-        # Email duplicado o inválido
+        # Email duplicado
         payload = {
             "name": "Otro Nombre",
             "email": "elena.rostova@example.com",  # Repetido
@@ -82,6 +82,57 @@ class ClientModelAndApiTests(TestCase):
         data = response.json()
         self.assertFalse(data["success"])
         self.assertIn("email", data["errors"])
+
+    def test_validation_invalid_email(self):
+        # Email con formato no válido
+        payload = {
+            "name": "Carlos Valente",
+            "email": "correo-invalido-sin-arroba",
+            "status": Client.STATUS_PROSPECTO,
+        }
+        response = self.client.post(
+            reverse("clients:api_client_create"),
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertIn("email", data["errors"])
+
+    def test_validation_empty_name(self):
+        # Nombre vacío o solo espacios en blanco
+        payload = {
+            "name": "   ",
+            "email": "nuevo.cliente@example.com",
+            "status": Client.STATUS_PROSPECTO,
+        }
+        response = self.client.post(
+            reverse("clients:api_client_create"),
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertIn("name", data["errors"])
+
+    def test_validation_short_name(self):
+        # Nombre con menos de 2 caracteres
+        payload = {
+            "name": "A",
+            "email": "nuevo.cliente.a@example.com",
+            "status": Client.STATUS_PROSPECTO,
+        }
+        response = self.client.post(
+            reverse("clients:api_client_create"),
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertIn("name", data["errors"])
 
     def test_api_client_update_success(self):
         payload = {

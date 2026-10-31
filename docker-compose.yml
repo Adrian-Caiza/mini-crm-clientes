@@ -4,8 +4,6 @@
 # SQLite volume for data durability across container restarts.
 # ============================================================
 
-version: "3.9"
-
 services:
   web:
     # Build the image from the Dockerfile in the project root

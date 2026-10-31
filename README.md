@@ -26,7 +26,7 @@
 
 - **Backend**: Django 5.1 · SQLite
 - **Frontend**: HTML5 semántico · CSS Custom Properties · Grid/Flexbox · Vanilla JS (ES2020+)
-- **Container**: Docker 24+ · docker-compose v3.9
+- **Container**: Docker 24+ · Docker Compose
 - **CI/CD**: GitHub Actions
 
 ---
@@ -39,7 +39,7 @@
 
 ### Docker
 - Docker **24+**
-- docker-compose (incluido en Docker Desktop)
+- Docker Compose (incluido en Docker Desktop)
 
 ---
 
@@ -48,8 +48,8 @@
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/mini-crm.git
-cd mini-crm
+git clone https://github.com/Adrian-Caiza/mini-crm-clientes.git
+cd mini-crm-clientes
 ```
 
 ### 2. Crear y activar un entorno virtual
@@ -185,7 +185,7 @@ El proyecto lee su configuración desde variables de entorno con valores por def
 |---|---|---|---|
 | `SECRET_KEY` | Clave secreta criptográfica de Django | Clave de desarrollo | `django-insecure-prod-key-xyz...` |
 | `DEBUG` | Modo depuración | `True` | `False` |
-| `ALLOWED_HOSTS` | Hosts/dominios permitidos (separados por coma) | `localhost,127.0.0.1,[::1]` | `crm.tuempresa.com` |
+| `ALLOWED_HOSTS` | Hosts/dominios permitidos (separados por coma) | `localhost,127.0.0.1,[::1]` | `crm.ejemplo.com` |
 | `DJANGO_DB_DIR` | Carpeta donde se almacena `db.sqlite3` | Raíz del proyecto (`BASE_DIR`) | `/app/data` (Docker volume) |
 
 ---
@@ -202,4 +202,4 @@ El proyecto lee su configuración desde variables de entorno con valores por def
 
 ## 📄 Licencia
 
-MIT © 2024
+MIT © 2026 Adrián Caiza
