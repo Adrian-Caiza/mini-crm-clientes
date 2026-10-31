@@ -35,7 +35,9 @@ services:
     # Environment overrides (safe defaults for development)
     environment:
       - DJANGO_SETTINGS_MODULE=crm_project.settings
+      - SECRET_KEY=django-insecure-mini-crm-docker-dev-key-change-in-production
       - DEBUG=True
+      - ALLOWED_HOSTS=localhost,127.0.0.1,web,0.0.0.0
       - DJANGO_DB_DIR=/app/data
 
     # Restart policy: keep the container alive unless explicitly stopped

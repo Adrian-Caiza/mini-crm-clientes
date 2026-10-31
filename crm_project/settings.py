@@ -17,15 +17,20 @@ DB_DIR = Path(os.environ.get('DJANGO_DB_DIR', BASE_DIR))
 DB_DIR.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------
-# Security
+# Security & Environment Configuration
 # ---------------------------------------------------------------------------
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mini-crm-dev-key-change-in-production-please'
+# In production, provide SECRET_KEY via environment variables.
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-mini-crm-dev-key-change-in-production-please',
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG is True by default for development, set to False in production.
+DEBUG = os.environ.get('DEBUG', 'True').strip().lower() in ('true', '1', 'yes', 't')
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS comma-separated list of host/domain names.
+_allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,[::1]')
+ALLOWED_HOSTS = [host.strip() for host in _allowed_hosts_env.split(',') if host.strip()]
 
 # ---------------------------------------------------------------------------
 # Application definition

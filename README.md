@@ -150,6 +150,7 @@ mini-crm/
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
+├── .env.example
 ├── .gitignore
 └── README.md
 ```
@@ -176,15 +177,16 @@ Accede al panel de administración en **http://localhost:8000/admin**
 
 ---
 
-## 🔒 Variables de entorno (producción)
+## 🔒 Variables de entorno
 
-Para despliegues en producción, configura estas variables de entorno:
+El proyecto lee su configuración desde variables de entorno con valores por defecto seguros para desarrollo local. Puedes usar el archivo `.env.example` como referencia para crear tu propio `.env`:
 
-| Variable | Descripción | Ejemplo |
-|---|---|---|
-| `SECRET_KEY` | Clave secreta de Django | `django-prod-secret-...` |
-| `DEBUG` | Modo debug | `False` |
-| `ALLOWED_HOSTS` | Hosts permitidos | `midominio.com` |
+| Variable | Descripción | Valor por defecto (Dev) | Ejemplo Producción |
+|---|---|---|---|
+| `SECRET_KEY` | Clave secreta criptográfica de Django | Clave de desarrollo | `django-insecure-prod-key-xyz...` |
+| `DEBUG` | Modo depuración | `True` | `False` |
+| `ALLOWED_HOSTS` | Hosts/dominios permitidos (separados por coma) | `localhost,127.0.0.1,[::1]` | `crm.tuempresa.com` |
+| `DJANGO_DB_DIR` | Carpeta donde se almacena `db.sqlite3` | Raíz del proyecto (`BASE_DIR`) | `/app/data` (Docker volume) |
 
 ---
 
