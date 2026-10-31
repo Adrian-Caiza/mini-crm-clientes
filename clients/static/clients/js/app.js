@@ -30,6 +30,10 @@ const appState = {
   pendingDeleteId: null,
   /** Human-readable name of the client pending deletion. */
   pendingDeleteName: null,
+  /** Element that opened the client modal (to return focus upon closing). */
+  modalTrigger: null,
+  /** Element that opened the delete confirm dialog (to return focus upon closing). */
+  confirmTrigger: null,
 };
 
 /* ================================================================
@@ -100,10 +104,10 @@ function initDashboard() {
 
 function attachEventListeners() {
   // Open create modal
-  dom.newClientBtn?.addEventListener('click', openCreateModal);
-  dom.sidebarNewClientBtn?.addEventListener('click', () => {
+  dom.newClientBtn?.addEventListener('click', (e) => openCreateModal(e.currentTarget));
+  dom.sidebarNewClientBtn?.addEventListener('click', (e) => {
     closeMobileSidebar();
-    openCreateModal();
+    openCreateModal(e.currentTarget);
   });
 
   // Close modal
@@ -134,19 +138,64 @@ function attachEventListeners() {
   dom.hamburgerBtn?.addEventListener('click', toggleMobileSidebar);
   dom.sidebarOverlay?.addEventListener('click', closeMobileSidebar);
 
-  // Global keyboard shortcuts
+  // Global keyboard shortcuts (Escape and Tab focus trap)
   document.addEventListener('keydown', handleKeyDown);
 }
 
 /* ================================================================
-   6. KEYBOARD SHORTCUTS
+   6. ACCESSIBILITY & KEYBOARD SHORTCUTS (Focus Trap & Escape)
    ================================================================ */
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Traps Tab and Shift+Tab key navigation within a modal container.
+ * @param {KeyboardEvent} event
+ * @param {HTMLElement} container
+ */
+function trapFocus(event, container) {
+  if (event.key !== 'Tab' || !container) return;
+
+  const focusable = Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR))
+    .filter((el) => el.offsetParent !== null || el.offsetWidth > 0 || el.offsetHeight > 0);
+
+  if (focusable.length === 0) {
+    event.preventDefault();
+    return;
+  }
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (event.shiftKey) {
+    if (document.activeElement === first || !container.contains(document.activeElement)) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else {
+    if (document.activeElement === last || !container.contains(document.activeElement)) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+}
+
 function handleKeyDown(e) {
   if (e.key === 'Escape') {
     if (dom.confirmOverlay?.classList.contains('open')) {
       closeConfirmDialog();
     } else if (dom.modalOverlay?.classList.contains('open')) {
       closeModal();
+    }
+    return;
+  }
+
+  if (e.key === 'Tab') {
+    if (dom.confirmOverlay?.classList.contains('open')) {
+      const dialog = dom.confirmOverlay.querySelector('.confirm-dialog') || dom.confirmOverlay;
+      trapFocus(e, dialog);
+    } else if (dom.modalOverlay?.classList.contains('open')) {
+      const modal = dom.clientModal || dom.modalOverlay;
+      trapFocus(e, modal);
     }
   }
 }
@@ -169,9 +218,11 @@ function closeMobileSidebar() {
    ================================================================ */
 /**
  * Opens the modal in "create" mode, clearing the form.
+ * @param {HTMLElement} [trigger]
  */
-function openCreateModal() {
+function openCreateModal(trigger) {
   appState.currentEditId = null;
+  appState.modalTrigger  = trigger instanceof HTMLElement ? trigger : document.activeElement;
   setModalMode('create');
   clearForm();
   openModal();
@@ -180,9 +231,11 @@ function openCreateModal() {
 /**
  * Opens the modal in "edit" mode and fetches client data to pre-fill.
  * @param {number} clientId
+ * @param {HTMLElement} [trigger]
  */
-async function openEditModal(clientId) {
+async function openEditModal(clientId, trigger) {
   appState.currentEditId = clientId;
+  appState.modalTrigger  = trigger instanceof HTMLElement ? trigger : document.activeElement;
   setModalMode('edit');
   clearForm();
 
@@ -240,6 +293,12 @@ function closeModal() {
   dom.modalOverlay.classList.remove('open');
   document.body.style.overflow = '';
   clearFormErrors();
+
+  // Return focus to the trigger element that opened the modal
+  if (appState.modalTrigger && typeof appState.modalTrigger.focus === 'function') {
+    appState.modalTrigger.focus();
+  }
+  appState.modalTrigger = null;
 }
 
 /* ================================================================
@@ -405,13 +464,14 @@ async function handleFormSubmit(event) {
    ================================================================ */
 /**
  * Opens the delete-confirmation dialog for a given client.
- * Called inline from the table row action button.
  * @param {number} clientId
  * @param {string} clientName
+ * @param {HTMLElement} [trigger]
  */
-function promptDeleteClient(clientId, clientName) {
+function promptDeleteClient(clientId, clientName, trigger) {
   appState.pendingDeleteId   = clientId;
   appState.pendingDeleteName = clientName;
+  appState.confirmTrigger    = trigger instanceof HTMLElement ? trigger : document.activeElement;
 
   if (dom.confirmClientName) {
     dom.confirmClientName.textContent = clientName;
@@ -419,6 +479,11 @@ function promptDeleteClient(clientId, clientName) {
 
   dom.confirmOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Move initial focus into the confirmation dialog (cancel button)
+  setTimeout(() => {
+    dom.confirmCancelBtn?.focus();
+  }, 100);
 }
 
 function closeConfirmDialog() {
@@ -426,6 +491,16 @@ function closeConfirmDialog() {
   document.body.style.overflow = '';
   appState.pendingDeleteId   = null;
   appState.pendingDeleteName = null;
+
+  // Return focus to trigger or fallback to new client button
+  if (appState.confirmTrigger && typeof appState.confirmTrigger.focus === 'function') {
+    if (document.body.contains(appState.confirmTrigger)) {
+      appState.confirmTrigger.focus();
+    } else {
+      dom.newClientBtn?.focus();
+    }
+  }
+  appState.confirmTrigger = null;
 }
 
 async function executeDelete() {
@@ -492,11 +567,11 @@ function handleTableActionClick(event) {
   if (!clientId) return;
 
   if (action === 'edit') {
-    openEditModal(clientId);
+    openEditModal(clientId, actionBtn);
   } else if (action === 'delete') {
     const row = actionBtn.closest('tr');
     const clientName = actionBtn.dataset.clientName || row?.dataset.clientName || 'este cliente';
-    promptDeleteClient(clientId, clientName);
+    promptDeleteClient(clientId, clientName, actionBtn);
   }
 }
 
