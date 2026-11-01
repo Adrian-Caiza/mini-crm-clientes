@@ -64,7 +64,6 @@ nosetests.xml
 coverage.xml
 
 # --- Docker ---
-*.dockerignore
 
 # --- Misc ---
 *.bak
