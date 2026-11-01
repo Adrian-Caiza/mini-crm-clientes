@@ -31,7 +31,7 @@ RUN mkdir -p /app/data
 # ── Collect static files into staticfiles/ ──────────────────
 # Django's collectstatic gathers all static assets so they can
 # be served efficiently in a production-like environment.
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=build-only python manage.py collectstatic --noinput
 
 # ── Expose port ──────────────────────────────────────────────
 EXPOSE 8000
