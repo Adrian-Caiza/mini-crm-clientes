@@ -228,10 +228,3 @@ Para desarrollo, utiliza `.env.example` como plantilla:
 
 ---
 
-
-
----
-
-## 📄 Licencia
-
-MIT © 2026 Adrián Caiza
