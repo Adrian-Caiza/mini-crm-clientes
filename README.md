@@ -1,4 +1,4 @@
-# Mini CRM de Clientes 🚀
+# CEO MARKETING - Mini CRM de Clientes 🚀
 
 > Sistema de gestión de clientes moderno, responsivo y listo para producción.  
 > Construido con **Django 5** en el backend y **HTML + CSS + Vanilla JS** en el frontend — sin dependencias de frameworks externos.
