@@ -791,7 +791,6 @@ function refreshStatCounts() {
   const activos    = rows.filter((r) => r.dataset.clientStatus === 'Cliente').length;
   const inactivos  = rows.filter((r) => r.dataset.clientStatus === 'Inactivo').length;
 
-  animateStat('stat-total',     (parseInt(document.getElementById('stat-total')?.textContent, 10) || 0) - total);
   animateNumber(document.getElementById('stat-total'),     parseInt(document.getElementById('stat-total')?.textContent,     10) || 0, total);
   animateNumber(document.getElementById('stat-prospecto'), parseInt(document.getElementById('stat-prospecto')?.textContent, 10) || 0, prospectos);
   animateNumber(document.getElementById('stat-activo'),    parseInt(document.getElementById('stat-activo')?.textContent,    10) || 0, activos);
