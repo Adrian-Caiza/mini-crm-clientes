@@ -5,6 +5,23 @@
 
 ---
 
+## Imagenes
+
+<img width="1917" height="1086" alt="image" src="https://github.com/user-attachments/assets/b32b534f-4295-4479-8d83-d4f4d8c2ed02" />
+<img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/780c18fd-8015-4691-82e2-dfcb5f2a945a" />
+<img width="1917" height="1085" alt="image" src="https://github.com/user-attachments/assets/a3cd1424-f731-4a2b-82c3-d4929bbc7de8" />
+<img width="1912" height="692" alt="image" src="https://github.com/user-attachments/assets/494c5f9b-5a7c-4b7f-880b-6bd9e62cc009" />
+<img width="1915" height="590" alt="image" src="https://github.com/user-attachments/assets/3bd86607-1667-4f51-b8b7-d2e3ed6806f7" />
+<img width="1847" height="887" alt="image" src="https://github.com/user-attachments/assets/6fe89070-db6b-458c-8fc3-834e285f1b98" />
+
+--- 
+
+## Proceso de desarrollo
+
+Usé un asistente de IA (Antigravity) como apoyo para planificar la arquitectura y generar código base. Revisé y probé cada parte, y corregí problemas que encontré en el proceso (validación en frontend, manejo de secretos y el build de Docker en el CI). 
+
+---
+
 ## ✨ Características
 
 | Funcionalidad | Detalle |
@@ -28,6 +45,7 @@
 - **Frontend**: HTML5 semántico · CSS Custom Properties · Grid/Flexbox · Vanilla JS (ES2020+)
 - **Container**: Docker 24+ · Docker Compose
 - **CI/CD**: GitHub Actions
+- **Antigravity**: Asistente de IA
 
 ---
 
@@ -210,13 +228,7 @@ Para desarrollo, utiliza `.env.example` como plantilla:
 
 ---
 
-## 🤝 Contribuir
 
-1. Haz fork del repositorio
-2. Crea tu rama: `git checkout -b feature/nueva-funcionalidad`
-3. Haz commit de tus cambios: `git commit -m 'feat: agregar nueva funcionalidad'`
-4. Push a la rama: `git push origin feature/nueva-funcionalidad`
-5. Abre un Pull Request
 
 ---
 
